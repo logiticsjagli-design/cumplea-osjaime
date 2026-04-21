@@ -1,0 +1,297 @@
+```html
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Feliz Cumpleaños 🎉</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+color:white;
+text-align:center;
+background:url('fondo.jpg') no-repeat center center fixed;
+background-size:cover;
+}
+
+h1{color:#ff4d6d;}
+
+.frase{
+margin:20px;
+font-size:20px;
+color:#ffd166;
+}
+
+.glow{
+font-size:28px;
+color:#ffd166;
+text-shadow:0 0 5px #ffd166,0 0 10px #ff4d6d,0 0 20px #ff4d6d;
+}
+
+/* pantalla inicio */
+
+#startScreen{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:black;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+z-index:9999;
+}
+
+/* galeria */
+
+.galeria{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+gap:12px;
+padding:20px;
+}
+
+.galeria img{
+width:100%;
+height:160px;
+object-fit:cover;
+border-radius:15px;
+cursor:pointer;
+transition:0.3s;
+}
+
+.galeria img:hover{
+transform:scale(1.05);
+}
+
+/* LIGHTBOX + ANIMACION */
+
+#lightbox{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.9);
+display:none;
+justify-content:center;
+align-items:center;
+z-index:99999;
+overflow:hidden;
+}
+
+#lightbox img{
+max-width:90%;
+max-height:90%;
+border-radius:15px;
+opacity:0;
+transform:scale(1.1);
+transition:all 1s ease;
+}
+
+#lightbox img.show{
+opacity:1;
+transform:scale(1);
+}
+
+/* botones */
+
+button{
+background:rgba(0,0,0,0.5);
+color:white;
+border:none;
+padding:10px;
+cursor:pointer;
+margin:10px;
+}
+
+/* confeti */
+
+.confetti{
+position:fixed;
+width:10px;
+height:10px;
+top:-10px;
+animation:fall linear infinite;
+}
+
+@keyframes fall{
+to{transform:translateY(100vh) rotate(360deg);}
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="startScreen">
+<div id="countdown">3</div>
+<button id="startBtn">Comenzar</button>
+</div>
+
+<h1>🎉 Feliz Cumpleaños 🎉</h1>
+<h2 id="nombre" class="glow"></h2>
+
+<audio id="audio" loop>
+<source src="musica.mp3" type="audio/mpeg">
+</audio>
+
+<button onclick="audio.play()">▶️ Play</button>
+<button onclick="audio.pause()">⏸️ Pausa</button>
+<button onclick="toggleSlideshow()">🎞️ Iniciar / Detener</button>
+
+<div class="frase">Nuestros mejores momentos ❤️</div>
+
+<div class="galeria" id="galeria"></div>
+
+<!-- LIGHTBOX -->
+<div id="lightbox" onclick="closeLightbox()">
+<img id="lightImg">
+</div>
+
+<h2>💌 Para ti</h2>
+
+<p style="max-width:600px;margin:auto;">
+Hoy celebramos la increíble persona que eres.
+Gracias por todos los momentos compartidos.
+Feliz cumpleaños 🎂❤️
+</p>
+
+<script>
+
+const audio=document.getElementById("audio");
+
+/* texto */
+const texto="Para: Q. F. B. José Jaime Méndez Palacios";
+let i=0;
+
+function escribir(){
+if(i<texto.length){
+document.getElementById("nombre").innerHTML+=texto.charAt(i);
+i++;
+setTimeout(escribir,50);
+}
+}
+
+/* inicio */
+
+document.getElementById("startBtn").onclick=function(){
+
+let count=3;
+let cd=document.getElementById("countdown");
+
+let interval=setInterval(()=>{
+
+count--;
+cd.innerText=count;
+
+if(count==0){
+clearInterval(interval);
+document.getElementById("startScreen").style.display="none";
+audio.play();
+escribir();
+}
+
+},1000);
+
+};
+
+/* galeria auto */
+
+const galeria = document.getElementById("galeria");
+
+for(let i=1;i<=109;i++){
+
+let img=document.createElement("img");
+img.src=`foto${i}.jpg`;
+
+img.onclick=()=>{
+openLightbox(img.src);
+};
+
+galeria.appendChild(img);
+
+}
+
+/* LIGHTBOX */
+
+const lightbox=document.getElementById("lightbox");
+const lightImg=document.getElementById("lightImg");
+
+function openLightbox(src){
+lightbox.style.display="flex";
+lightImg.classList.remove("show");
+
+setTimeout(()=>{
+lightImg.src=src;
+lightImg.classList.add("show");
+},50);
+}
+
+function closeLightbox(){
+lightbox.style.display="none";
+stopSlideshow();
+}
+
+/* SLIDESHOW PRO */
+
+let slideInterval=null;
+let current=1;
+
+function toggleSlideshow(){
+
+if(slideInterval){
+stopSlideshow();
+}else{
+startSlideshow();
+}
+
+}
+
+function startSlideshow(){
+
+lightbox.style.display="flex";
+
+slideInterval=setInterval(()=>{
+
+lightImg.classList.remove("show");
+
+setTimeout(()=>{
+
+lightImg.src=`foto${current}.jpg`;
+lightImg.classList.add("show");
+
+current++;
+if(current>109) current=1;
+
+},300);
+
+},2500);
+
+}
+
+function stopSlideshow(){
+clearInterval(slideInterval);
+slideInterval=null;
+}
+
+/* confeti */
+
+for(let i=0;i<100;i++){
+let c=document.createElement('div');
+c.className='confetti';
+c.style.left=Math.random()*100+'vw';
+c.style.animationDuration=(Math.random()*3+2)+'s';
+c.style.backgroundColor=`hsl(${Math.random()*360},100%,50%)`;
+document.body.appendChild(c);
+}
+
+</script>
+
+</body>
+</html>
+```
