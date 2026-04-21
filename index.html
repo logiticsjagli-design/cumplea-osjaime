@@ -1,11 +1,15 @@
-```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
 <title>Feliz Cumpleaños 🎉</title>
 
 <style>
+
+* {
+    box-sizing: border-box;
+}
 
 body{
 margin:0;
@@ -14,20 +18,26 @@ color:white;
 text-align:center;
 background:url('fondo.jpg') no-repeat center center fixed;
 background-size:cover;
+min-height:100vh;
 }
 
-h1{color:#ff4d6d;}
+h1{
+color:#ff4d6d;
+font-size:1.8rem;
+margin:15px 0 5px;
+}
 
 .frase{
-margin:20px;
-font-size:20px;
+margin:10px;
+font-size:16px;
 color:#ffd166;
 }
 
 .glow{
-font-size:28px;
+font-size:22px;
 color:#ffd166;
 text-shadow:0 0 5px #ffd166,0 0 10px #ff4d6d,0 0 20px #ff4d6d;
+padding:0 10px;
 }
 
 /* pantalla inicio */
@@ -46,81 +56,172 @@ align-items:center;
 z-index:9999;
 }
 
-/* galeria */
-
-.galeria{
-display:grid;
-grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
-gap:12px;
-padding:20px;
+#countdown{
+font-size:80px;
+color:#ff4d6d;
+font-weight:bold;
 }
 
-.galeria img{
-width:100%;
-height:160px;
-object-fit:cover;
-border-radius:15px;
+#startBtn{
+font-size:24px;
+padding:15px 30px;
+background:#ff4d6d;
+color:white;
+border:none;
+border-radius:50px;
 cursor:pointer;
 transition:0.3s;
 }
 
-.galeria img:hover{
+#startBtn:hover{
 transform:scale(1.05);
+background:#ff6b8a;
 }
 
-/* LIGHTBOX + ANIMACION */
+/* GALERIA - 2 COLUMNAS PARA MÓVIL */
+.galeria{
+display:grid;
+grid-template-columns:repeat(2, 1fr);
+gap:8px;
+padding:10px;
+max-width:100%;
+}
 
+.galeria img{
+width:100%;
+height:180px;
+object-fit:cover;
+border-radius:12px;
+cursor:pointer;
+transition:0.3s;
+box-shadow:0 4px 8px rgba(0,0,0,0.3);
+}
+
+.galeria img:hover{
+transform:scale(1.02);
+}
+
+/* LIGHTBOX ESTILO INSTAGRAM */
 #lightbox{
 position:fixed;
 top:0;
 left:0;
 width:100%;
 height:100%;
-background:rgba(0,0,0,0.9);
+background:rgba(0,0,0,0.95);
 display:none;
 justify-content:center;
 align-items:center;
 z-index:99999;
-overflow:hidden;
+flex-direction:column;
 }
 
 #lightbox img{
-max-width:90%;
-max-height:90%;
+max-width:95%;
+max-height:80%;
 border-radius:15px;
-opacity:0;
-transform:scale(1.1);
-transition:all 1s ease;
+object-fit:contain;
+transition:opacity 0.3s ease;
 }
 
-#lightbox img.show{
-opacity:1;
-transform:scale(1);
+/* controles del slideshow */
+.lightbox-controls{
+position:absolute;
+bottom:20px;
+left:0;
+right:0;
+display:flex;
+justify-content:center;
+gap:20px;
+z-index:100000;
 }
 
-/* botones */
-
-button{
-background:rgba(0,0,0,0.5);
+.lightbox-controls button{
+background:rgba(0,0,0,0.7);
 color:white;
 border:none;
-padding:10px;
+padding:12px 20px;
+border-radius:30px;
+font-size:16px;
 cursor:pointer;
-margin:10px;
+transition:0.3s;
+backdrop-filter:blur(5px);
+}
+
+.lightbox-controls button:hover{
+background:#ff4d6d;
+transform:scale(1.05);
+}
+
+/* botones inferiores de audio */
+.audio-buttons{
+position:fixed;
+bottom:10px;
+right:10px;
+display:flex;
+gap:8px;
+z-index:9998;
+background:rgba(0,0,0,0.6);
+padding:8px 12px;
+border-radius:30px;
+backdrop-filter:blur(5px);
+}
+
+.audio-buttons button{
+background:rgba(255,77,109,0.8);
+color:white;
+border:none;
+padding:8px 15px;
+border-radius:25px;
+font-size:14px;
+cursor:pointer;
+transition:0.3s;
+}
+
+.audio-buttons button:hover{
+background:#ff4d6d;
+transform:scale(1.05);
 }
 
 /* confeti */
-
 .confetti{
 position:fixed;
-width:10px;
-height:10px;
+width:8px;
+height:8px;
 top:-10px;
 animation:fall linear infinite;
+pointer-events:none;
+z-index:9997;
 }
 
 @keyframes fall{
 to{transform:translateY(100vh) rotate(360deg);}
+}
+
+/* mensaje de error */
+#audioError{
+position:fixed;
+bottom:70px;
+right:10px;
+background:rgba(255,0,0,0.9);
+color:white;
+padding:6px 12px;
+border-radius:20px;
+font-size:11px;
+z-index:99999;
+display:none;
+font-weight:bold;
+}
+
+/* texto final */
+.mensaje-final{
+max-width:90%;
+margin:20px auto;
+padding:15px;
+background:rgba(0,0,0,0.5);
+border-radius:15px;
+font-size:14px;
+line-height:1.5;
 }
 
 </style>
@@ -130,168 +231,246 @@ to{transform:translateY(100vh) rotate(360deg);}
 
 <div id="startScreen">
 <div id="countdown">3</div>
-<button id="startBtn">Comenzar</button>
+<button id="startBtn">🎉 Comenzar 🎉</button>
 </div>
 
 <h1>🎉 Feliz Cumpleaños 🎉</h1>
 <h2 id="nombre" class="glow"></h2>
 
-<audio id="audio" loop>
+<audio id="audio" loop preload="auto">
 <source src="musica.mp3" type="audio/mpeg">
 </audio>
 
-<button onclick="audio.play()">▶️ Play</button>
-<button onclick="audio.pause()">⏸️ Pausa</button>
-<button onclick="toggleSlideshow()">🎞️ Iniciar / Detener</button>
-
-<div class="frase">Nuestros mejores momentos ❤️</div>
+<div class="frase">❤️ Nuestros mejores momentos ❤️</div>
 
 <div class="galeria" id="galeria"></div>
 
-<!-- LIGHTBOX -->
-<div id="lightbox" onclick="closeLightbox()">
-<img id="lightImg">
+<div class="mensaje-final">
+💌 Para ti<br><br>
+Hoy celebramos la increíble persona que eres.<br>
+Gracias por todos los momentos compartidos.<br>
+<strong>Feliz cumpleaños 🎂❤️</strong>
 </div>
 
-<h2>💌 Para ti</h2>
+<!-- LIGHTBOX ESTILO INSTAGRAM -->
+<div id="lightbox" onclick="cerrarLightbox()">
+<img id="lightImg">
+<div class="lightbox-controls" onclick="event.stopPropagation()">
+<button onclick="imagenAnterior()">◀ Anterior</button>
+<button onclick="toggleSlideshow()">▶ Iniciar / Detener</button>
+<button onclick="imagenSiguiente()">Siguiente ▶</button>
+</div>
+</div>
 
-<p style="max-width:600px;margin:auto;">
-Hoy celebramos la increíble persona que eres.
-Gracias por todos los momentos compartidos.
-Feliz cumpleaños 🎂❤️
-</p>
+<!-- Botones flotantes de audio -->
+<div class="audio-buttons">
+<button onclick="reproducirAudio()">▶️</button>
+<button onclick="pausarAudio()">⏸️</button>
+</div>
+
+<div id="audioError">
+⚠️ Música no disponible
+</div>
 
 <script>
 
-const audio=document.getElementById("audio");
-
-/* texto */
-const texto="Para: Q. F. B. José Jaime Méndez Palacios";
-let i=0;
-
-function escribir(){
-if(i<texto.length){
-document.getElementById("nombre").innerHTML+=texto.charAt(i);
-i++;
-setTimeout(escribir,50);
-}
-}
-
-/* inicio */
-
-document.getElementById("startBtn").onclick=function(){
-
-let count=3;
-let cd=document.getElementById("countdown");
-
-let interval=setInterval(()=>{
-
-count--;
-cd.innerText=count;
-
-if(count==0){
-clearInterval(interval);
-document.getElementById("startScreen").style.display="none";
-audio.play();
-escribir();
-}
-
-},1000);
-
-};
-
-/* galeria auto */
-
+// ========== VARIABLES ==========
+const audio = document.getElementById("audio");
 const galeria = document.getElementById("galeria");
+const lightbox = document.getElementById("lightbox");
+const lightImg = document.getElementById("lightImg");
+const audioError = document.getElementById("audioError");
 
-for(let i=1;i<=109;i++){
+let slideInterval = null;
+let currentIndex = 1;      // Índice actual de imagen
+let totalImagenes = 109;    // Total de imágenes
+let imagenesCargadas = [];   // Array para verificar imágenes existentes
 
-let img=document.createElement("img");
-img.src=`foto${i}.jpg`;
+// ========== DETECTAR ERRORES DE AUDIO ==========
+audio.addEventListener('error', function() {
+    audioError.style.display = 'block';
+    setTimeout(() => {
+        audioError.style.display = 'none';
+    }, 3000);
+});
 
-img.onclick=()=>{
-openLightbox(img.src);
+// ========== FUNCIONES DE AUDIO ==========
+function reproducirAudio() {
+    audio.play().catch(() => {
+        alert('🔊 Haz clic en la página primero');
+    });
+}
+
+function pausarAudio() {
+    audio.pause();
+}
+
+// ========== TEXTO CON EFECTO MÁQUINA ==========
+const texto = "Para: Q. F. B. José Jaime Méndez Palacios";
+let letraIndex = 0;
+
+function escribir() {
+    if (letraIndex < texto.length) {
+        document.getElementById("nombre").innerHTML += texto.charAt(letraIndex);
+        letraIndex++;
+        setTimeout(escribir, 50);
+    }
+}
+
+// ========== INICIO CON AUDIO ==========
+document.getElementById("startBtn").onclick = function() {
+    let count = 3;
+    let cd = document.getElementById("countdown");
+    
+    reproducirAudio();
+    
+    let interval = setInterval(() => {
+        count--;
+        cd.innerText = count;
+        
+        if (count == 0) {
+            clearInterval(interval);
+            document.getElementById("startScreen").style.display = "none";
+            escribir();
+        }
+    }, 1000);
 };
 
-galeria.appendChild(img);
-
+// ========== CARGAR GALERÍA (SOLO IMÁGENES QUE EXISTEN) ==========
+function cargarGaleria() {
+    galeria.innerHTML = '';
+    let imagenesEncontradas = 0;
+    
+    for(let i = 1; i <= totalImagenes; i++) {
+        let img = document.createElement("img");
+        img.src = `foto${i}.jpg`;
+        img.alt = `Foto ${i}`;
+        
+        img.onclick = (function(numero) {
+            return function() {
+                abrirLightboxConImagen(numero);
+            };
+        })(i);
+        
+        // Si la imagen no existe, la omitimos
+        img.onerror = function() {
+            this.style.display = 'none';
+        };
+        
+        galeria.appendChild(img);
+        imagenesCargadas.push(i);
+    }
 }
 
-/* LIGHTBOX */
-
-const lightbox=document.getElementById("lightbox");
-const lightImg=document.getElementById("lightImg");
-
-function openLightbox(src){
-lightbox.style.display="flex";
-lightImg.classList.remove("show");
-
-setTimeout(()=>{
-lightImg.src=src;
-lightImg.classList.add("show");
-},50);
+// ========== FUNCIONES LIGHTBOX ESTILO INSTAGRAM ==========
+function abrirLightboxConImagen(numero) {
+    currentIndex = numero;
+    lightbox.style.display = "flex";
+    lightImg.style.opacity = "0";
+    
+    setTimeout(() => {
+        lightImg.src = `foto${currentIndex}.jpg`;
+        lightImg.style.opacity = "1";
+    }, 50);
+    
+    // Detener slideshow automático al abrir manualmente
+    detenerSlideshow();
 }
 
-function closeLightbox(){
-lightbox.style.display="none";
-stopSlideshow();
+function cerrarLightbox() {
+    lightbox.style.display = "none";
+    detenerSlideshow();
 }
 
-/* SLIDESHOW PRO */
-
-let slideInterval=null;
-let current=1;
-
-function toggleSlideshow(){
-
-if(slideInterval){
-stopSlideshow();
-}else{
-startSlideshow();
+function imagenSiguiente() {
+    detenerSlideshow();
+    currentIndex++;
+    if(currentIndex > totalImagenes) {
+        currentIndex = 1;
+    }
+    
+    lightImg.style.opacity = "0";
+    setTimeout(() => {
+        lightImg.src = `foto${currentIndex}.jpg`;
+        lightImg.style.opacity = "1";
+    }, 100);
 }
 
+function imagenAnterior() {
+    detenerSlideshow();
+    currentIndex--;
+    if(currentIndex < 1) {
+        currentIndex = totalImagenes;
+    }
+    
+    lightImg.style.opacity = "0";
+    setTimeout(() => {
+        lightImg.src = `foto${currentIndex}.jpg`;
+        lightImg.style.opacity = "1";
+    }, 100);
 }
 
-function startSlideshow(){
-
-lightbox.style.display="flex";
-
-slideInterval=setInterval(()=>{
-
-lightImg.classList.remove("show");
-
-setTimeout(()=>{
-
-lightImg.src=`foto${current}.jpg`;
-lightImg.classList.add("show");
-
-current++;
-if(current>109) current=1;
-
-},300);
-
-},2500);
-
+// ========== SLIDESHOW AUTOMÁTICO (una por una hasta el final) ==========
+function toggleSlideshow() {
+    if(slideInterval) {
+        detenerSlideshow();
+    } else {
+        iniciarSlideshow();
+    }
 }
 
-function stopSlideshow(){
-clearInterval(slideInterval);
-slideInterval=null;
+function iniciarSlideshow() {
+    // Si el lightbox no está abierto, lo abrimos
+    if(lightbox.style.display !== "flex") {
+        lightbox.style.display = "flex";
+    }
+    
+    slideInterval = setInterval(() => {
+        // Avanzar a la siguiente imagen
+        currentIndex++;
+        
+        // Si llegamos al final, volvemos a la primera
+        if(currentIndex > totalImagenes) {
+            currentIndex = 1;
+        }
+        
+        // Cambiar la imagen con animación
+        lightImg.style.opacity = "0";
+        setTimeout(() => {
+            lightImg.src = `foto${currentIndex}.jpg`;
+            lightImg.style.opacity = "1";
+        }, 100);
+        
+    }, 2500); // Cambia cada 2.5 segundos
 }
 
-/* confeti */
-
-for(let i=0;i<100;i++){
-let c=document.createElement('div');
-c.className='confetti';
-c.style.left=Math.random()*100+'vw';
-c.style.animationDuration=(Math.random()*3+2)+'s';
-c.style.backgroundColor=`hsl(${Math.random()*360},100%,50%)`;
-document.body.appendChild(c);
+function detenerSlideshow() {
+    if(slideInterval) {
+        clearInterval(slideInterval);
+        slideInterval = null;
+    }
 }
+
+// ========== CONFETI ==========
+for(let i = 0; i < 120; i++) {
+    let c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = Math.random() * 100 + 'vw';
+    c.style.animationDuration = (Math.random() * 3 + 2) + 's';
+    c.style.animationDelay = Math.random() * 5 + 's';
+    c.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 60%)`;
+    c.style.width = (Math.random() * 8 + 4) + 'px';
+    c.style.height = (Math.random() * 8 + 4) + 'px';
+    document.body.appendChild(c);
+}
+
+// ========== INICIALIZAR ==========
+cargarGaleria();
+
+console.log("%c🎉 Feliz Cumpleaños! 🎉", "color: #ff4d6d; font-size: 18px; font-weight: bold;");
+console.log("%c✨ Galería en 2 columnas | Slideshow automático ✨", "color: #ffd166; font-size: 14px;");
 
 </script>
 
 </body>
 </html>
-```
